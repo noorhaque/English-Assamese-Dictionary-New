@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>English to Assamese Dictionary</title>
+    <style>
+        /* Modern Font Import */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        /* CSS Variables for Theming */
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #212529;
+            --card-bg: #ffffff;
+            --primary-color: #1a73e8; /* Google's blue */
+            --secondary-color: #5f6368;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --border-color: #dadce0;
+            --placeholder-color: #80868b;
+            --pos-tag-bg: #e8f0fe;
+            --pos-tag-text: #1967d2;
+            --word-tag-bg: #f1f3f5;
+            --word-tag-text: #3c4043;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #202124;
+            --text-color: #e8eaed;
+            --card-bg: #202124;
+            --primary-color: #8ab4f8;
+            --secondary-color: #9aa0a6;
+            --border-color: #5f6368;
+            --placeholder-color: #9aa0a6;
+            --pos-tag-bg: #283142;
+            --pos-tag-text: #8ab4f8;
+            --word-tag-bg: #3c4043;
+            --word-tag-text: #e8eaed;
+        }
+
+        /* Base Styles */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { font-family: 'Poppins', 'Roboto', sans-serif; background-color: var(--bg-color); color: var(--text-color); height: 100%; overflow: hidden; }
+        #app-container { display: flex; flex-direction: column; height: 100vh; width: 100%; max-width: 500px; margin: 0 auto; background-color: var(--card-bg); }
+
+        /* Header Styles */
+        .sub-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 20px 10px; background-color: var(--card-bg); flex-shrink: 0; }
+        .sub-header h1 { font-size: 1.6rem; font-weight: 600; color: var(--primary-color); }
+        #menu-button { background: none; border: none; cursor: pointer; padding: 5px; }
+        #menu-button svg { width: 24px; height: 24px; fill: var(--secondary-color); }
+        
+        main { display: flex; flex-direction: column; flex-grow: 1; overflow: hidden; }
+        
+        /* Rounded Search Box */
+        .search-container { padding: 15px 20px; flex-shrink: 0; }
+        .search-box { position: relative; }
+        #search-input { width: 100%; padding: 15px 50px 15px 20px; font-size: 1rem; border-radius: 12px; border: 1px solid var(--border-color); background-color: var(--bg-color); color: var(--text-color); outline: none; transition: border-color 0.3s, box-shadow 0.3s; }
+        #search-input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent); }
+        #search-button { position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background: none; border: none; padding: 10px; cursor: pointer; }
+        #search-button svg { width: 22px; height: 22px; fill: var(--secondary-color); }
+
+        /* Results Section */
+        #result-container { overflow-y: auto; flex-grow: 1; padding: 0 20px 20px; }
+        .placeholder-text { text-align: center; padding-top: 60px; color: var(--secondary-color); font-size: 1.1rem; }
+        .placeholder-text p:last-child { margin-top: 5px; }
+        
+        /* All other result, menu, and modal styles are unchanged but included for completeness */
+        .result-card { background: var(--card-bg); padding-top: 20px; }
+        .result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+        .result-header h2 { font-size: 1.8rem; font-weight: 700; color: var(--primary-color); text-transform: capitalize; }
+        .phonetic { color: var(--secondary-color); font-size: 1rem; margin-bottom: 15px; }
+        #favorite-btn, #audio-btn { background: none; border: none; cursor: pointer; padding: 0 5px; }
+        #audio-btn svg { width: 28px; height: 28px; fill: var(--primary-color); }
+        #favorite-btn svg { width: 28px; height: 28px; fill: var(--placeholder-color); transition: fill 0.2s, transform 0.2s; }
+        #favorite-btn.favorited svg { fill: #fbbc04; transform: scale(1.2); }
+        .pos-section { margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px; }
+        .pos-section:first-of-type { border-top: none; margin-top: 0; padding-top: 0;}
+        .pos-tag { display: inline-block; background-color: var(--pos-tag-bg); color: var(--pos-tag-text); padding: 5px 12px; border-radius: 20px; font-size: 0.9rem; font-weight: 500; margin-bottom: 12px; }
+        .meaning-block { margin-bottom: 15px; }
+        .meaning-title { font-weight: 600; font-size: 0.9rem; color: var(--primary-color); margin-bottom: 4px; }
+        .meaning-text { font-size: 1.05rem; line-height: 1.6; padding-left: 10px; }
+        .meaning-example { font-style: italic; color: var(--secondary-color); font-size: 0.9rem; padding-left: 10px; margin-top: 4px; }
+        .translate-btn { background: none; border: none; color: var(--primary-color); cursor: pointer; font-size: 0.8rem; padding: 2px 0; margin-left: 10px; }
+        .translate-btn:disabled { color: var(--secondary-color); cursor: default; }
+        .assamese-def-container { font-style: italic; margin-left: 10px; color: var(--text-color); }
+        .word-tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; padding-left: 10px; }
+        .word-tag { background-color: var(--word-tag-bg); color: var(--word-tag-text); padding: 4px 10px; border-radius: 15px; font-size: 0.9rem; cursor: pointer; transition: background-color 0.2s, color 0.2s; }
+        .word-tag:hover { background-color: var(--primary-color); color: white; }
+        .loading-text, .error-text { text-align: center; padding-top: 40px; color: var(--secondary-color); font-size: 1.1rem; }
+        .error-text { color: #ea4335; }
+        #menu-dropdown { display: none; position: absolute; top: 70px; right: 20px; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; box-shadow: 0 4px 15px var(--shadow-color); z-index: 1000; overflow: hidden; }
+        .menu-item { padding: 12px 20px; cursor: pointer; display: flex; align-items: center; gap: 15px; font-size: 0.95rem; border-bottom: 1px solid var(--border-color); transition: background-color 0.2s; }
+        .menu-item:last-child { border-bottom: none; }
+        .menu-item:hover { background-color: var(--bg-color); }
+        .menu-item svg { width: 20px; height: 20px; fill: var(--secondary-color); flex-shrink: 0; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); z-index: 2000; display: none; align-items: center; justify-content: center; animation: fadeIn 0.3s; }
+        .modal-content { background: var(--card-bg); width: 90%; max-width: 450px; max-height: 80vh; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.2); display: flex; flex-direction: column; animation: slideUp 0.4s ease-out; }
+        .modal-header { padding: 15px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .modal-title { font-size: 1.2rem; color: var(--primary-color); }
+        .close-modal-btn { background: none; border: none; font-size: 1.8rem; font-weight: 300; cursor: pointer; color: var(--text-color); }
+        .modal-body { padding: 20px; overflow-y: auto; }
+        .list-item { padding: 12px 5px; border-bottom: 1px solid var(--border-color); font-size: 1rem; }
+        .list-item:last-child { border: none; }
+        .proverb-en { font-weight: 500; }
+        .proverb-as { color: var(--primary-color); margin-top: 5px; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .theme-switch-wrapper { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .theme-switch { display: inline-block; height: 24px; position: relative; width: 44px; }
+        .theme-switch input { display:none; }
+        .slider { background-color: #ccc; bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0; transition: .4s; border-radius: 34px; }
+        .slider:before { background-color: #fff; bottom: 4px; content: ""; height: 16px; left: 4px; position: absolute; transition: .4s; width: 16px; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary-color); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+    </style>
+</head>
+<body data-theme="light">
+
+    <div id="app-container">
+        <!-- Layout Structure Updated -->
+        <div class="sub-header">
+            <h1>Dictionary&Translator</h1>
+            <button id="menu-button"><svg viewBox="0 0 24 24"><path d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z" /></svg></button>
+        </div>
+        <main>
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Type an English word...">
+                    <button id="search-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div id="result-container">
+                <div class="placeholder-text"><p>Meaning will appear here.</p><p>অৰ্থ ইয়াত ওলাব।</p></div>
+            </div>
+        </main>
+        
+        <!-- Menu Dropdown -->
+        <div id="menu-dropdown">
+            <div class="menu-item" id="fav-words-btn"><svg viewBox="0 0 24 24"><path d="M12,15.4L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.1L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z"/></svg><span>Favorite Words</span></div>
+            <div class="menu-item" id="history-btn"><svg viewBox="0 0 24 24"><path d="M13,3A9,9 0 0,0 4,12H1L4.89,15.89L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3M12,8V13L16.28,15.54L17,14.33L13.5,12.25V8H12Z"/></svg><span>History</span></div>
+            <div class="menu-item" id="proverbs-btn"><svg viewBox="0 0 24 24"><path d="M18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2H18A2,2 0 0,1 20,4V20A2,2 0 0,1 18,22M6,4V20H18V4H6M13.5,18H16V16H13.5V18M13.5,14H16V12H13.5V14M8,18H10.5V16H8V18M8,14H10.5V12H8V14M8,10H16V8H8V10Z"/></svg><span>Proverbs</span></div>
+            <div class="menu-item"><div class="theme-switch-wrapper"><span>Dark Mode</span><label class="theme-switch" for="theme-toggle"><input type="checkbox" id="theme-toggle" /><span class="slider round"></span></label></div></div>
+        </div>
+        
+        <!-- Modal for Favorites, etc. -->
+        <div id="content-modal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header"><h3 id="modal-title" class="modal-title"></h3><button class="close-modal-btn">×</button></div>
+                <div id="modal-body" class="modal-body"></div>
+            </div>
+        </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // All JavaScript is identical to the previous version.
+        // It's already robust and handles all the logic correctly.
+
+        const proverbsData = [
+            { en: "A friend in need is a friend indeed.", as: "দুখৰ সময়ত যিজন কাষত থাকে, তেওঁৱেই প্ৰকৃত বন্ধু।" },
+            { en: "All that glitters is not gold.", as: "চকচকীয়া সকলো বস্তু সোণ নহয়।" },
+{ en: "Morning shows the day.", as: "যি লাই (মূলা) বাঢ়ে তাৰ দুপাততে চিন।" },
+{ en: "To err is human.", as: "মানুহ মাত্রেই ভুল হয়।" },
+{ en: "Even Homer sometimes nods.", as: "হস্তিৰো পিচলে পাও সজ্জনৰো বুৰে নাও।" },
+{ en: "To kill two birds with one stone.", as: "আইৰো বার্তা গঙ্গাৰো যাত্রা, (এক বুঢ়ীৰ দুই কাম ধানো বানে চোহে আম)।" },
+{ en: "Money begets money.", as: "টকাত টকা বাঢ়ে।" },
+{ en: "The more you read the more you learn.", as: "যিমানে পঢ়িবা সিমানে শিকিবা।" },
+{ en: "Time and tide wait for none.", as: "সময় আৰু সুযোগে কাকো অপেক্ষা নকৰে।" },
+{ en: "To make a mountain from a mole hill.", as: "তিলকে তাল কৰা, ঢৌটোকে ৰৌটো কৰা।" },
+{ en: "Venison becomes enemy to a deer.", as: "হৰিণাৰ মাংসই বৈৰী।" },
+{ en: "An empty vessel sounds much.", as: "ঢোৰা সাপৰ ফোঁচ-ফোঁচনিয়ে সাৰ।" },
+{ en: "Birds of a feather flock together.", as: "সাপেহে সাপৰ ঠেং দেখে।" },
+{ en: "Like father like son.", as: "বাপ চাই বেটা।" },
+{ en: "Honesty is the best policy.", as: "সাধুতাই উৎকৃষ্ট কৌশল।" },
+{ en: "Rome was not built in a day.", as: "ভুকুতে কল নপকে।" },
+{ en: "Hard labour is the another name of good luck.", as: "পৰিশ্রমেই সৌভাগ্যৰ আন এটা নাম।" },
+{ en: "Necessity is the mother of invention.", as: "অভাৱেই আৱিষ্কাৰৰ মূল।" },
+{ en: "The truth prevails always.", as: "সত্যৰ সদায় জয়।" },
+{ en: "Tit for tat.", as: "যেনে কুকুৰ তেনে টাঙোন।" },
+{ en: "Majority must be granted.", as: "অধিকৰ মত সমর্থনযোগ্য।" },
+{ en: "Grey hairs should always be respected.", as: "বয়সীয়া লোক সম্মানৰ যোগ্য।" },
+{ en: "Handsome is that handsome does.", as: "ৰূপে কি কৰে গুণেহে সংসাৰ তৰে।" },
+{ en: "Strike the iron while it is hot. (Make hay while the sun shines.)", as: "সময় থাকোঁতে কাম কৰা।" },
+{ en: "Give him an inch and he will take all.", as: "লাই পোৱা কুকুৰে ডিঙিলৈ জঁপিয়ায়।" },
+{ en: "The world is not a bed of roses.", as: "পৃথিৱী সুখৰ ঠাই নহয়।" },
+{ en: "A little learning is a dangerous thing.", as: "অল্পবিদ্যা ভয়ংকী।" },
+{ en: "Man proposes God disposes.", as: "মানুহে পাতে ঈশ্বৰে ভাঙে।" },
+{ en: "Look before you leap.", as: "চাই খাবা জাগি শুবা।" },
+{ en: "Opportunity never comes twice.", as: "টেঙা আম বজাৰত এবাৰহে বেচিব পাৰি।" },
+{ en: "Where there is a will there is a way.", as: "ইচ্ছা থাকিলে উপায় উলায়।" },
+{ en: "Forgiveness is a divine thing.", as: "ক্ষমা স্বর্গীয় বস্তু।" },
+{ en: "Learning is the best friend.", as: "বিদ্যাই পৰম বন্ধু।" },
+{ en: "A wise man is praised everywhere.", as: "গুণীৰ গুণ সকলোতে।" },
+{ en: "It is one’s words that bring punishment or reward.", as: "কথাত কটা যায় কথাত বঁটা পায়।" },
+{ en: "A careful man never faces destruction.", as: "সাৱধানৰ বিনাশ নাই।" },
+{ en: "Misfortune does not come alone.", as: "বিপদ অকলে নাহে।" },
+{ en: "As you sow, so you reap.", as: "যেনে কাম তেনে ফল।" },
+{ en: "A rolling stone gathers no moss.", as: "লৰি ফুৰা কেঁকোৰাৰ তেল নাই।" },
+{ en: "Danger besets danger.", as: "যতে বাঘৰ ভয় ত’তে ৰাতি হয়।" },
+{ en: "Cut your coat according to your cloth.", as: "আঠুৱা চাই ঠেং মেলা, (আয় চাই ব্যয় কৰা)।" },
+{ en: "One swallow does not make a summer.", as: "একে মাঘে জাৰ নাযায়।" },
+{ en: "A sleeping fox catches no poultry.", as: "শুই থকা শিয়ালে হাঁহ ধৰিব নোৱাৰে।" },
+{ en: "Hunger is the best sauce.", as: "ভোকেই ভাতৰ আঞ্জা।" },
+{ en: "Many a little makes a mickle.", as: "ৰাইজে নখ জোকাৰিলে নৈ বয়।" },
+{ en: "To cherish a serpent in one’s bosom.", as: "গাখীৰ খুৱাই সাপ পোহা।" },
+{ en: "Constant dropping wears away a stone.", as: "ঘহি থাকিলে শিলো ক্ষয় যায়।" },
+{ en: "He is the wise who speaks little.", as: "অলপ কথন জ্ঞানীৰ লক্ষণ।" },
+{ en: "Every dog is a lion at home.", as: "নিজৰ দেশত ঠাকুৰ পৰৰ দেশত কুকুৰ।" },
+{ en: "A bad workman quarrels with his tools.", as: "নাচিব নাজানিলে চোতালখনহে বেয়া।" },
+{ en: "A bolt form the blue.", as: "বিনা মেঘে বজ্রপাত।" },
+{ en: "Example is better than precept.", as: "উপদেশতকৈ আর্হি ভাল।" },
+{ en: "Everyone is wise after the Event.", as: "চোৰ গ’লে বুদ্ধি বৰষুণ গ’লে জাপি।" },
+{ en: "Might is right. OR Survival of the fittest.", as: "জোৰ যাৰ মুলুক তাৰ।" },
+{ en: "Murder will be out.", as: "পাপ লুকাই নাথাকে।" },
+{ en: "No pain no gain.", as: "যত্ন কৰিলে ৰত্ন পায়।" },
+{ en: "Where there is a will there is a way.", as: "মন কৰিলেই চন বাকৰা বাৰীৰ ধন।" },
+{ en: "Silence seldom harms.", as: "বোবাৰ শত্রু নাই।" },
+{ en: "Out of sight out of mind.", as: "চকুৰ আতৰেই মনৰ আতৰ।" },
+{ en: "Something is better than nothing. (Half a loaf is better than no loaf.)", as: "নাই মোমাইতকৈ কণা মোমাই ভাল।" },
+{ en: "Failure is the pillar of success.", as: "অকৃতকার্যতাই কৃতকাৰ্যতাৰ মূল।" },
+{ en: "Habit is the second nature.", as: "অভ্যাসৰ নৰ কৰ্ণপথে কৰে শৰ।" },
+{ en: "Charity begins at home.", as: "ঘৰেই শিশুৰ আচল শিক্ষাৰ ঠাই।" },
+{ en: "Money is the root of all evils.", as: "ধনেই ধ্বংসৰ কাৰণ।" },
+{ en: "God helps those who help themselves.", as: "যি নিজক সহায় কৰে তেওঁক ভগৱানেও সহায় কৰে।" },
+{ en: "Hard labour is the mother of good luck.", as: "পৰিশ্রমেই সৌভাগ্যৰ জননী (প্রসূতি)।" },
+{ en: "The rainy season doesn’t start at a frog’s call.", as: "বেঙৰ কথাত বাৰিষা নহয়।" },
+{ en: "To harm oneself to predict co-wife’s misfortune.", as: "নিজৰ নাক কাটি সতিনীৰ যাত্রা ভঙ্গ কৰা।" },
+        ];
+        const posTranslations = {
+            "noun": "বিশেষ্য (Noun)", "verb": "ক্ৰিয়া (Verb)", "adjective": "বিশেষণ (Adjective)", "adverb": "ক্ৰিয়া বিশেষণ (Adverb)",
+        };
+
+        let debounceTimer;
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
+        const resultContainer = document.getElementById('result-container');
+        const menuButton = document.getElementById('menu-button');
+        const menuDropdown = document.getElementById('menu-dropdown');
+        
+        let favorites = JSON.parse(localStorage.getItem('dictionaryAppFavorites')) || [];
+        let history = JSON.parse(localStorage.getItem('dictionaryAppHistory')) || [];
+        const saveFavorites = () => localStorage.setItem('dictionaryAppFavorites', JSON.stringify(favorites));
+        const saveHistory = () => localStorage.setItem('dictionaryAppHistory', JSON.stringify(history));
+
+        const translateTextAPI = async (text) => {
+            if (!text) return "";
+            try {
+                const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|as`);
+                const data = await response.json();
+                return data?.responseData?.translatedText || text;
+            } catch { return text; }
+        };
+
+        const findWord = async (word) => {
+            word = word.trim().toLowerCase();
+            if (!word) { showPlaceholder(); return; }
+            showLoading();
+            try {
+                const dictResponse = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+                if (!dictResponse.ok) throw new Error("Word not found");
+                const dictData = await dictResponse.json();
+                const mainTranslation = await translateTextAPI(word);
+                const translatedMeanings = await Promise.all(
+                    dictData[0].meanings.map(async (meaning) => ({
+                        ...meaning,
+                        translatedSynonyms: await Promise.all(meaning.synonyms.map(s => translateTextAPI(s))),
+                        translatedAntonyms: await Promise.all(meaning.antonyms.map(a => translateTextAPI(a))),
+                    }))
+                );
+                displayResult(dictData[0], mainTranslation, translatedMeanings);
+                addToHistory(word);
+            } catch (error) {
+                showError(`Sorry, couldn't find "${word}". Check spelling or internet.`);
+            }
+        };
+
+        const displayResult = (dictData, assameseTranslation, translatedMeanings) => {
+            const word = dictData.word;
+            const isFavorited = favorites.includes(word);
+            const phonetic = dictData.phonetic || dictData.phonetics.find(p => p.text)?.text || '';
+            const audioSrc = dictData.phonetics.find(p => p.audio)?.audio;
+            let resultHTML = `<div class="result-card">
+                <div class="result-header"><h2>${word}</h2>
+                    <div>
+                        ${audioSrc ? `<button id="audio-btn" data-audio="${audioSrc}"><svg viewBox="0 0 24 24"><path d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z" /></svg></button>` : ''}
+                        <button id="favorite-btn" class="${isFavorited ? 'favorited' : ''}" data-word="${word}"><svg viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg></button>
+                    </div></div>
+                ${phonetic ? `<p class="phonetic">${phonetic}</p>` : ''}
+                <div class="meaning-block">
+                    <p class="meaning-title">Assamese Meaning (অসমীয়া অৰ্থ)</p>
+                    <p class="meaning-text" style="font-weight: bold;">${assameseTranslation}</p>
+                </div>`;
+            translatedMeanings.forEach((meaning) => {
+                const translatedPos = posTranslations[meaning.partOfSpeech] || meaning.partOfSpeech;
+                resultHTML += `<div class="pos-section"><span class="pos-tag">${translatedPos}</span>`;
+                if (meaning.definitions.length > 0) {
+                     resultHTML += `<div class="meaning-block"><p class="meaning-title">English Definition</p><p class="meaning-text">${meaning.definitions[0].definition}</p><button class="translate-btn" data-text="${meaning.definitions[0].definition}">Translate (অনুবাদ কৰক)</button><div class="assamese-def-container"></div></div>`;
+                }
+                if (meaning.synonyms && meaning.synonyms.length > 0) {
+                    resultHTML += `<div class="meaning-block"><p class="meaning-title">Synonyms (সমার্থক শব্দ)</p><div class="word-tag-list">${meaning.synonyms.map((s, i) => `<span class="word-tag" data-word="${s}">${s} (${meaning.translatedSynonyms[i]})</span>`).join('')}</div></div>`;
+                }
+                if (meaning.antonyms && meaning.antonyms.length > 0) {
+                     resultHTML += `<div class="meaning-block"><p class="meaning-title">Antonyms (বিপৰীতার্থক শব্দ)</p><div class="word-tag-list">${meaning.antonyms.map((a, i) => `<span class="word-tag" data-word="${a}">${a} (${meaning.translatedAntonyms[i]})</span>`).join('')}</div></div>`;
+                }
+                resultHTML += `</div>`;
+            });
+            resultHTML += `</div>`;
+            resultContainer.innerHTML = resultHTML;
+            document.getElementById('favorite-btn')?.addEventListener('click', toggleFavorite);
+            document.getElementById('audio-btn')?.addEventListener('click', (e) => new Audio(e.currentTarget.dataset.audio).play());
+        };
+
+        const showPlaceholder = () => { resultContainer.innerHTML = `<div class="placeholder-text"><p>Meaning will appear here.</p><p>অৰ্থ ইয়াত ওলাব।</p></div>`; };
+        const showLoading = () => { resultContainer.innerHTML = `<div class="loading-text">Searching... সন্ধান কৰি থকা হৈছে...</div>`; };
+        const showError = (message) => { resultContainer.innerHTML = `<div class="error-text">${message}</div>`; };
+        const addToHistory = (word) => { history = history.filter(item => item !== word); history.unshift(word); if (history.length > 50) history.pop(); saveHistory(); };
+        const toggleFavorite = (event) => { const btn = event.currentTarget; const word = btn.dataset.word; if (favorites.includes(word)) { favorites = favorites.filter(item => item !== word); btn.classList.remove('favorited'); } else { favorites.push(word); btn.classList.add('favorited'); } saveFavorites(); };
+        const openModal = (title, content) => { const modal = document.getElementById('content-modal'); modal.querySelector('.modal-title').innerHTML = title; modal.querySelector('.modal-body').innerHTML = content; modal.style.display = 'flex'; };
+        const closeModal = () => { document.getElementById('content-modal').style.display = 'none'; };
+        const showFavorites = () => { let c = favorites.length === 0 ? '<p>No favorite words yet.</p>' : favorites.map(w => `<div class="list-item">${w}</div>`).join(''); openModal('Favorite Words', c); };
+        const showHistory = () => { let c = history.length === 0 ? '<p>Search history is empty.</p>' : history.map(w => `<div class="list-item">${w}</div>`).join(''); openModal('Search History', c); };
+        const showProverbs = () => { let c = proverbsData.map(p => `<div class="list-item list-item-proverb"><p class="proverb-en">${p.en}</p><p class="proverb-as">${p.as}</p></div>`).join(''); openModal('Proverbs (ফকৰা-যোজনা)', c); };
+        const switchTheme = (e) => document.body.setAttribute('data-theme', e.target.checked ? 'dark' : 'light');
+
+        searchButton.addEventListener('click', () => findWord(searchInput.value));
+        searchInput.addEventListener('keyup', (e) => { if (e.key === 'Enter') findWord(e.target.value); });
+        searchInput.addEventListener('input', (e) => { clearTimeout(debounceTimer); const searchTerm = e.target.value; if(searchTerm) { debounceTimer = setTimeout(() => findWord(searchTerm), 1000); } else { showPlaceholder(); } });
+
+        resultContainer.addEventListener('click', async (e) => {
+            if (e.target.matches('.translate-btn')) { const btn = e.target; const textToTranslate = btn.dataset.text; const targetContainer = btn.nextElementSibling; btn.textContent = 'Translating...'; btn.disabled = true; const translation = await translateTextAPI(textToTranslate); targetContainer.textContent = translation; }
+            if (e.target.matches('.word-tag')) { const newWord = e.target.dataset.word; searchInput.value = newWord; findWord(newWord); }
+        });
+        
+        const toggleMenu = (e) => { e.stopPropagation(); menuDropdown.style.display = menuDropdown.style.display === 'block' ? 'none' : 'block'; };
+        menuButton.addEventListener('click', toggleMenu);
+        document.addEventListener('click', (e) => { if (!menuDropdown.contains(e.target) && e.target !== menuButton) { menuDropdown.style.display = 'none'; } });
+
+        const favWordsBtn = document.getElementById('fav-words-btn');
+        const historyBtn = document.getElementById('history-btn');
+        const proverbsBtn = document.getElementById('proverbs-btn');
+        const closeModalBtn = document.querySelector('.close-modal-btn');
+        const contentModal = document.getElementById('content-modal');
+        const themeToggle = document.getElementById('theme-toggle');
+
+        favWordsBtn.addEventListener('click', () => { showFavorites(); menuDropdown.style.display = 'none'; });
+        historyBtn.addEventListener('click', () => { showHistory(); menuDropdown.style.display = 'none'; });
+        proverbsBtn.addEventListener('click', () => { showProverbs(); menuDropdown.style.display = 'none'; });
+        closeModalBtn.addEventListener('click', closeModal);
+        contentModal.addEventListener('click', (e) => { if (e.target === contentModal) closeModal(); });
+        themeToggle.addEventListener('change', switchTheme);
+    });
+    </script>
+</body>
+</html>
