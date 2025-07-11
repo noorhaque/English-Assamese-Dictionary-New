@@ -8,61 +8,58 @@
         /* Modern Font Import */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-        /* All CSS is from your working version */
+        /* All CSS is identical to the version you provided */
         :root {
             --bg-color: #f8f9fa;
             --text-color: #212529;
             --card-bg: #ffffff;
-            --primary-color: #1a73e8; /* Google's blue */
-            --secondary-color: #5f6368;
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
             --shadow-color: rgba(0, 0, 0, 0.08);
-            --border-color: #dadce0;
-            --placeholder-color: #80868b;
-            --pos-tag-bg: #e8f0fe;
-            --pos-tag-text: #1967d2;
+            --border-color: #e9ecef;
+            --placeholder-color: #adb5bd;
+            --pos-tag-bg: #e7f1ff;
+            --pos-tag-text: #0056b3;
             --word-tag-bg: #f1f3f5;
-            --word-tag-text: #3c4043;
+            --word-tag-text: #495057;
         }
-
         [data-theme="dark"] {
-            --bg-color: #202124;
-            --text-color: #e8eaed;
-            --card-bg: #202124;
-            --primary-color: #8ab4f8;
-            --secondary-color: #9aa0a6;
-            --border-color: #5f6368;
-            --placeholder-color: #9aa0a6;
-            --pos-tag-bg: #283142;
-            --pos-tag-text: #8ab4f8;
-            --word-tag-bg: #3c4043;
-            --word-tag-text: #e8eaed;
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --primary-color: #4dabf7;
+            --secondary-color: #9e9e9e;
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --border-color: #343a40;
+            --placeholder-color: #777;
+            --pos-tag-bg: #2a3b4d;
+            --pos-tag-text: #82c9ff;
+            --word-tag-bg: #2c3e50;
+            --word-tag-text: #bdc3c7;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { font-family: 'Poppins', 'Roboto', sans-serif; background-color: var(--bg-color); color: var(--text-color); height: 100%; overflow: hidden; }
-        #app-container { display: flex; flex-direction: column; height: 100vh; width: 100%; max-width: 500px; margin: 0 auto; background-color: var(--card-bg); }
-        .sub-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 20px 10px; background-color: var(--card-bg); flex-shrink: 0; }
-        .sub-header h1 { font-size: 1.6rem; font-weight: 600; color: var(--primary-color); }
+        html, body { font-family: 'Poppins', sans-serif; background-color: var(--bg-color); color: var(--text-color); height: 100%; overflow: hidden; }
+        #app-container { display: flex; flex-direction: column; height: 100vh; width: 100%; max-width: 500px; margin: 0 auto; background-color: var(--card-bg); box-shadow: 0 4px 20px var(--shadow-color); }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background-color: var(--card-bg); border-bottom: 1px solid var(--border-color); flex-shrink: 0; }
+        header h1 { font-size: 1.4rem; font-weight: 600; color: var(--primary-color); }
         #menu-button { background: none; border: none; cursor: pointer; padding: 5px; }
-        #menu-button svg { width: 24px; height: 24px; fill: var(--secondary-color); }
+        #menu-button svg { width: 24px; height: 24px; fill: var(--text-color); }
         main { display: flex; flex-direction: column; flex-grow: 1; overflow: hidden; }
-        .search-container { padding: 15px 20px; flex-shrink: 0; }
+        .search-container { padding: 20px; flex-shrink: 0; }
         .search-box { position: relative; }
-        #search-input { width: 100%; padding: 15px 50px 15px 20px; font-size: 1rem; border-radius: 12px; border: 1px solid var(--border-color); background-color: var(--bg-color); color: var(--text-color); outline: none; transition: border-color 0.3s, box-shadow 0.3s; }
+        #search-input { width: 100%; padding: 15px 50px 15px 20px; font-size: 1rem; border-radius: 50px; border: 1px solid var(--border-color); background-color: var(--bg-color); color: var(--text-color); outline: none; transition: border-color 0.3s, box-shadow 0.3s; }
         #search-input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent); }
         #search-button { position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background: none; border: none; padding: 10px; cursor: pointer; }
         #search-button svg { width: 22px; height: 22px; fill: var(--secondary-color); }
-        #result-container { overflow-y: auto; flex-grow: 1; padding: 0 20px 20px; }
-        .placeholder-text { text-align: center; padding-top: 60px; color: var(--secondary-color); font-size: 1.1rem; }
-        .placeholder-text p:last-child { margin-top: 5px; }
-        .result-card { background: var(--card-bg); padding-top: 20px; }
+        #result-container { padding: 0 20px 20px; overflow-y: auto; flex-grow: 1; }
+        .result-card { background: var(--card-bg); padding: 20px; border-radius: 12px; }
         .result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
         .result-header h2 { font-size: 1.8rem; font-weight: 700; color: var(--primary-color); text-transform: capitalize; }
         .phonetic { color: var(--secondary-color); font-size: 1rem; margin-bottom: 15px; }
         #favorite-btn, #audio-btn { background: none; border: none; cursor: pointer; padding: 0 5px; }
         #audio-btn svg { width: 28px; height: 28px; fill: var(--primary-color); }
         #favorite-btn svg { width: 28px; height: 28px; fill: var(--placeholder-color); transition: fill 0.2s, transform 0.2s; }
-        #favorite-btn.favorited svg { fill: #fbbc04; transform: scale(1.2); }
+        #favorite-btn.favorited svg { fill: #FFD700; transform: scale(1.2); }
         .pos-section { margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px; }
         .pos-section:first-of-type { border-top: none; margin-top: 0; padding-top: 0;}
         .pos-tag { display: inline-block; background-color: var(--pos-tag-bg); color: var(--pos-tag-text); padding: 5px 12px; border-radius: 20px; font-size: 0.9rem; font-weight: 500; margin-bottom: 12px; }
@@ -76,13 +73,13 @@
         .word-tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; padding-left: 10px; }
         .word-tag { background-color: var(--word-tag-bg); color: var(--word-tag-text); padding: 4px 10px; border-radius: 15px; font-size: 0.9rem; cursor: pointer; transition: background-color 0.2s, color 0.2s; }
         .word-tag:hover { background-color: var(--primary-color); color: white; }
-        .loading-text, .error-text { text-align: center; padding-top: 40px; color: var(--secondary-color); font-size: 1.1rem; }
-        .error-text { color: #ea4335; }
-        #menu-dropdown { display: none; position: absolute; top: 70px; right: 20px; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; box-shadow: 0 4px 15px var(--shadow-color); z-index: 1000; overflow: hidden; }
+        .placeholder-text, .loading-text, .error-text { text-align: center; padding-top: 40px; color: var(--placeholder-color); font-size: 1.1rem; }
+        .error-text { color: #ff6b6b; }
+        #menu-dropdown { display: none; position: absolute; top: 60px; right: 20px; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; box-shadow: 0 4px 15px var(--shadow-color); z-index: 1000; overflow: hidden; }
         .menu-item { padding: 12px 20px; cursor: pointer; display: flex; align-items: center; gap: 15px; font-size: 0.95rem; border-bottom: 1px solid var(--border-color); transition: background-color 0.2s; }
         .menu-item:last-child { border-bottom: none; }
         .menu-item:hover { background-color: var(--bg-color); }
-        .menu-item svg { width: 20px; height: 20px; fill: var(--secondary-color); flex-shrink: 0; }
+        .menu-item svg { width: 20px; height: 20px; fill: var(--text-color); flex-shrink: 0; }
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); z-index: 2000; display: none; align-items: center; justify-content: center; animation: fadeIn 0.3s; }
         .modal-content { background: var(--card-bg); width: 90%; max-width: 450px; max-height: 80vh; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.2); display: flex; flex-direction: column; animation: slideUp 0.4s ease-out; }
         .modal-header { padding: 15px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
@@ -95,7 +92,7 @@
         .proverb-as { color: var(--primary-color); margin-top: 5px; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .theme-switch-wrapper { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .theme-switch-wrapper { display: flex; align-items: center; gap: 10px; }
         .theme-switch { display: inline-block; height: 24px; position: relative; width: 44px; }
         .theme-switch input { display:none; }
         .slider { background-color: #ccc; bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0; transition: .4s; border-radius: 34px; }
@@ -107,10 +104,16 @@
 <body data-theme="light">
 
     <div id="app-container">
-        <div class="sub-header">
-            <h1>অভিধান English</h1>
+        <header>
+            <h1>অভিধান</h1>
             <button id="menu-button"><svg viewBox="0 0 24 24"><path d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z" /></svg></button>
-        </div>
+            <div id="menu-dropdown">
+                <div class="menu-item" id="fav-words-btn"><svg viewBox="0 0 24 24"><path d="M12,15.4L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.1L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z"/></svg><span>Favorite Words</span></div>
+                <div class="menu-item" id="history-btn"><svg viewBox="0 0 24 24"><path d="M13,3A9,9 0 0,0 4,12H1L4.89,15.89L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3M12,8V13L16.28,15.54L17,14.33L13.5,12.25V8H12Z"/></svg><span>History</span></div>
+                <div class="menu-item" id="proverbs-btn"><svg viewBox="0 0 24 24"><path d="M18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2H18A2,2 0 0,1 20,4V20A2,2 0 0,1 18,22M6,4V20H18V4H6M13.5,18H16V16H13.5V18M13.5,14H16V12H13.5V14M8,18H10.5V16H8V18M8,14H10.5V12H8V14M8,10H16V8H8V10Z"/></svg><span>Proverbs</span></div>
+                <div class="menu-item"><span>Dark Mode</span><label class="theme-switch" for="theme-toggle"><input type="checkbox" id="theme-toggle" /><span class="slider round"></span></label></div>
+            </div>
+        </header>
         <main>
             <div class="search-container">
                 <div class="search-box">
@@ -122,31 +125,19 @@
                 <div class="placeholder-text"><p>Meaning will appear here.</p><p>অৰ্থ ইয়াত ওলাব।</p></div>
             </div>
         </main>
-        
-        <div id="menu-dropdown">
-            <div class="menu-item" id="fav-words-btn"><svg viewBox="0 0 24 24"><path d="M12,15.4L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.1L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z"/></svg><span>Favorite Words</span></div>
-            <div class="menu-item" id="history-btn"><svg viewBox="0 0 24 24"><path d="M13,3A9,9 0 0,0 4,12H1L4.89,15.89L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3M12,8V13L16.28,15.54L17,14.33L13.5,12.25V8H12Z"/></svg><span>History</span></div>
-            <div class="menu-item" id="proverbs-btn"><svg viewBox="0 0 24 24"><path d="M18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2H18A2,2 0 0,1 20,4V20A2,2 0 0,1 18,22M6,4V20H18V4H6M13.5,18H16V16H13.5V18M13.5,14H16V12H13.5V14M8,18H10.5V16H8V18M8,14H10.5V12H8V14M8,10H16V8H8V10Z"/></svg><span>Proverbs</span></div>
-            <div class="menu-item"><div class="theme-switch-wrapper"><span>Dark Mode</span><label class="theme-switch" for="theme-toggle"><input type="checkbox" id="theme-toggle" /><span class="slider round"></span></label></div></div>
+    </div>
+    <div id="content-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header"><h3 id="modal-title" class="modal-title"></h3><button class="close-modal-btn">×</button></div>
+            <div id="modal-body" class="modal-body"></div>
         </div>
-        
-        <div id="content-modal" class="modal-overlay">
-            <div class="modal-content">
-                <div class="modal-header"><h3 id="modal-title" class="modal-title"></h3><button class="close-modal-btn">×</button></div>
-                <div id="modal-body" class="modal-body"></div>
-            </div>
-        </div>
+    </div>
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         // --- DATA & CONFIG ---
-        const proverbsData = [
-            { en: "A friend in need is a friend indeed.", as: "দুখৰ সময়ত যিজন কাষত থাকে, তেওঁৱেই প্ৰকৃত বন্ধু।" },
-            { en: "All that glitters is not gold.", as: "চকচকীয়া সকলো বস্তু সোণ নহয়।" },
-        ];
-        const posTranslations = {
-            "noun": "বিশেষ্য (Noun)", "verb": "ক্ৰিয়া (Verb)", "adjective": "বিশেষণ (Adjective)", "adverb": "ক্ৰিয়া বিশেষণ (Adverb)",
-        };
+        const proverbsData = [ { en: "A friend in need is a friend indeed.", as: "দুখৰ সময়ত যিজন কাষত থাকে, তেওঁৱেই প্ৰকৃত বন্ধু।" }, { en: "All that glitters is not gold.", as: "চকচকীয়া সকলো বস্তু সোণ নহয়।" }, ];
+        const posTranslations = { "noun": "বিশেষ্য (Noun)", "verb": "ক্ৰিয়া (Verb)", "adjective": "বিশেষণ (Adjective)", "adverb": "ক্ৰিয়া বিশেষণ (Adverb)", "pronoun": "সৰ্বনাম (Pronoun)", "preposition": "অব্যয় (Preposition)", "conjunction": "সংযোগ (Conjunction)", "interjection": "ভাৱবোধক (Interjection)" };
 
         // --- STATE & DOM ---
         let debounceTimer;
@@ -155,13 +146,26 @@
         const resultContainer = document.getElementById('result-container');
         const menuButton = document.getElementById('menu-button');
         const menuDropdown = document.getElementById('menu-dropdown');
-        
+        const contentModal = document.getElementById('content-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalBody = document.getElementById('modal-body');
+        const closeModalBtn = contentModal.querySelector('.close-modal-btn');
+        const favWordsBtn = document.getElementById('fav-words-btn');
+        const historyBtn = document.getElementById('history-btn');
+        const proverbsBtn = document.getElementById('proverbs-btn');
+        const themeToggle = document.getElementById('theme-toggle');
+
         // --- LOCALSTORAGE INTEGRATION (FIX) ---
         let favorites = JSON.parse(localStorage.getItem('dictionaryAppFavorites')) || [];
         let history = JSON.parse(localStorage.getItem('dictionaryAppHistory')) || [];
 
-        const saveFavorites = () => localStorage.setItem('dictionaryAppFavorites', JSON.stringify(favorites));
-        const saveHistory = () => localStorage.setItem('dictionaryAppHistory', JSON.stringify(history));
+        const saveFavorites = () => {
+            localStorage.setItem('dictionaryAppFavorites', JSON.stringify(favorites));
+        };
+        const saveHistory = () => {
+            localStorage.setItem('dictionaryAppHistory', JSON.stringify(history));
+        };
+        // --- END LOCALSTORAGE INTEGRATION ---
 
         // --- CORE API & DISPLAY LOGIC ---
         const translateTextAPI = async (text) => {
@@ -256,33 +260,30 @@
             saveFavorites(); // Save after modification
         };
 
-        const openModal = (title, content) => { const modal = document.getElementById('content-modal'); modal.querySelector('.modal-title').innerHTML = title; modal.querySelector('.modal-body').innerHTML = content; modal.style.display = 'flex'; };
-        const closeModal = () => { document.getElementById('content-modal').style.display = 'none'; };
+        const openModal = (title, content) => { modalTitle.innerHTML = title; modalBody.innerHTML = content; contentModal.style.display = 'flex'; };
+        const closeModal = () => { contentModal.style.display = 'none'; };
         const showFavorites = () => { let c = favorites.length === 0 ? '<p>No favorite words yet.</p>' : favorites.map(w => `<div class="list-item">${w}</div>`).join(''); openModal('Favorite Words', c); };
         const showHistory = () => { let c = history.length === 0 ? '<p>Search history is empty.</p>' : history.map(w => `<div class="list-item">${w}</div>`).join(''); openModal('Search History', c); };
         const showProverbs = () => { let c = proverbsData.map(p => `<div class="list-item list-item-proverb"><p class="proverb-en">${p.en}</p><p class="proverb-as">${p.as}</p></div>`).join(''); openModal('Proverbs (ফকৰা-যোজনা)', c); };
         const switchTheme = (e) => document.body.setAttribute('data-theme', e.target.checked ? 'dark' : 'light');
 
+        // --- EVENT LISTENERS ---
         searchButton.addEventListener('click', () => findWord(searchInput.value));
         searchInput.addEventListener('keyup', (e) => { if (e.key === 'Enter') findWord(e.target.value); });
-        searchInput.addEventListener('input', (e) => { clearTimeout(debounceTimer); const searchTerm = e.target.value; if(searchTerm) { debounceTimer = setTimeout(() => findWord(searchTerm), 1000); } else { showPlaceholder(); } });
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(debounceTimer);
+            const searchTerm = e.target.value;
+            if(searchTerm) { debounceTimer = setTimeout(() => findWord(searchTerm), 1000); } 
+            else { showPlaceholder(); }
+        });
 
         resultContainer.addEventListener('click', async (e) => {
             if (e.target.matches('.translate-btn')) { const btn = e.target; const textToTranslate = btn.dataset.text; const targetContainer = btn.nextElementSibling; btn.textContent = 'Translating...'; btn.disabled = true; const translation = await translateTextAPI(textToTranslate); targetContainer.textContent = translation; }
             if (e.target.matches('.word-tag')) { const newWord = e.target.dataset.word; searchInput.value = newWord; findWord(newWord); }
         });
         
-        const toggleMenu = (e) => { e.stopPropagation(); menuDropdown.style.display = menuDropdown.style.display === 'block' ? 'none' : 'block'; };
-        menuButton.addEventListener('click', toggleMenu);
+        menuButton.addEventListener('click', (e) => { e.stopPropagation(); menuDropdown.style.display = menuDropdown.style.display === 'block' ? 'none' : 'block'; });
         document.addEventListener('click', (e) => { if (!menuDropdown.contains(e.target) && e.target !== menuButton) { menuDropdown.style.display = 'none'; } });
-
-        const favWordsBtn = document.getElementById('fav-words-btn');
-        const historyBtn = document.getElementById('history-btn');
-        const proverbsBtn = document.getElementById('proverbs-btn');
-        const closeModalBtn = document.querySelector('.close-modal-btn');
-        const contentModal = document.getElementById('content-modal');
-        const themeToggle = document.getElementById('theme-toggle');
-
         favWordsBtn.addEventListener('click', () => { showFavorites(); menuDropdown.style.display = 'none'; });
         historyBtn.addEventListener('click', () => { showHistory(); menuDropdown.style.display = 'none'; });
         proverbsBtn.addEventListener('click', () => { showProverbs(); menuDropdown.style.display = 'none'; });
